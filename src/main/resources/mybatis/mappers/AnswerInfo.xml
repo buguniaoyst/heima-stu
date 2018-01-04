@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.heima.test.dao.AnswerInfoDao" >
+
+    <resultMap id="answerInfoResult" type="com.heima.test.domain.AnswerInfo" autoMapping="true">
+        <id column="id" property="id"></id>
+    </resultMap>
+
+    <select id="queryAnswerInfoListGroupByClassId" resultMap="answerInfoResult">
+        SELECT class_id ,test_id  FROM answer_info GROUP BY class_id;
+    </select>
+
+	<select id="queryAnswerInfoListByClassIdGroupByTestId" resultMap="answerInfoResult">
+        SELECT * FROM answer_info WHERE class_id = #{classId} GROUP BY test_id;
+    </select>
+
+    <select id="queryClassAnswerListByClassIdAndTestIdGroupByStuId" resultMap="answerInfoResult">
+        SELECT
+            CLASS_ID CLASSID,
+            TEST_ID TESTID,
+            ANSWER,
+            ID,
+            STU_ID STUID,
+            SILU,
+            ITEM_ID ITEMID,
+            STU_NAME STUNAME,
+            ANSWER_STATUS
+        FROM
+            answer_info
+        WHERE
+            (CLASS_ID = #{classId} AND TEST_ID = #{testId})
+        GROUP BY
+            STU_ID;
+    </select>
+</mapper>
