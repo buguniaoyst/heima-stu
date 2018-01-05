@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.heima.test.domain.StudentInfo;
 import com.heima.test.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.heima.test.utils.Constants;
 import com.heima.test.utils.FastDFSTool;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class UploadController {
@@ -53,10 +56,10 @@ public class UploadController {
 
 	@RequestMapping(value="/uploadZip.do")
 	@ResponseBody
-	public Map<String, Object> uploadZip(MultipartFile fileUpload) throws FileNotFoundException, IOException, Exception{
-
-
-        String filePath = uploadService.uploadZip(fileUpload);
+	public Map<String, Object> uploadZip(MultipartFile fileUpload, HttpSession session) throws FileNotFoundException, IOException, Exception{
+		StudentInfo studentInfo = (StudentInfo) session.getAttribute("loginStu");
+		Integer classId = studentInfo.getClassId();
+		String filePath = uploadService.uploadZip(fileUpload,classId);
         Map<String, Object> result = new HashMap<>();
         result.put("zipPath", filePath);
         result.put("status", true);

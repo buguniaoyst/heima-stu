@@ -135,7 +135,7 @@
                 "                        <textarea placeholder=\"请输入答案\" class=\"layui-textarea answer\"></textarea>\n" +
                 "                    </div>\n" +
                 "                </div>\n" +
-                "       上传zip附件：<input type='file' name='fileUpload' class='layui-input' onchange='uploadZip()'>  <input name='zipPath' id='zipPath' type='hidden'> </div>\n" +
+                "       上传zip附件：<input type='file' name='fileUpload' class='layui-input' onchange="+'uploadZip('+items.id+')'+">  <input name='zipPath' id="+'zipPath'+items.id+" type='hidden'> </div>\n" +
                 "        </div>");
 
             _div.appendTo($("#itemArea"));
@@ -194,7 +194,7 @@
     });
 
     //上传附件
-    function  uploadZip() {
+    function  uploadZip(itemId) {
         var options = {
             url : "/rest/uploadZip.do",
             type : "post",
@@ -202,7 +202,7 @@
             success : function(data) {
                 console.log("上传的视频地址："+data.zipPath);
                 //设置图片的在表单提交后的值
-                $("#zipPath").val(data.zipPath);
+                $("#zipPath"+itemId).val(data.zipPath);
             }
         };
         $("#answerForm").ajaxSubmit(options);

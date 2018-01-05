@@ -17,7 +17,7 @@ import java.util.Properties;
 @Service
 @Transactional
 public class UploadService {
-    public String uploadZip(MultipartFile file) {
+    public String uploadZip(MultipartFile file, Integer classId) {
         //用来检测程序运行时间
         long  startTime=System.currentTimeMillis();
         System.out.println("fileName："+file.getOriginalFilename());
@@ -26,8 +26,12 @@ public class UploadService {
             InputStream in = UploadService.class.getClassLoader().getResourceAsStream("file_upload.properties");
             Properties p = new Properties();
             p.load(in);
-            String uploadPath = p.getProperty("upload_dir");
-            String filePath = uploadPath+System.currentTimeMillis()+file.getOriginalFilename();
+            String uploadPath = p.getProperty("upload_dir")+classId+File.separator+System.currentTimeMillis()+File.separator;
+            File dir = new File(uploadPath);
+            if(!dir.exists()){
+                dir.mkdirs();
+            }
+            String filePath = uploadPath+file.getOriginalFilename();
             //获取输出流
             OutputStream os=new FileOutputStream(filePath);
             //获取输入流 CommonsMultipartFile 中可以直接得到文件的流
