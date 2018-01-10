@@ -112,7 +112,32 @@
 
             console.log(items);
 
-            var _div = $(codeItemTemplate);
+            var _div = $("<div class='itemAnswerArea'   id="+items.id+" >\n" +
+                "            <div class=\"site-title\">\n" +
+                "                <fieldset><legend><a >第"+count+"题</a></legend></fieldset>\n" +
+                "            </div>\n" +
+                "            <div class=\"site-item\">\n" +
+                "               "+ items.itemContent+"\n" +
+                "            </div>\n" +
+                "            <div>\n" +
+                "\n" +
+                "                <div class=\"layui-form-item layui-form-text\">\n" +
+                "                    <label class=\"layui-form-label\">请在写下你的做题思路（步骤）：</label>\n" +
+                "                    <div class=\"layui-input-block\">\n" +
+                "                        <textarea placeholder=\"请输入思路\" class=\"layui-textarea silu\"></textarea>\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "            <div>\n" +
+                "\n" +
+                "                <div class=\"layui-form-item layui-form-text\">\n" +
+                "                    <label class=\"layui-form-label\">请将你的答案粘贴到下边的文本域中：</label>\n" +
+                "                    <div class=\"layui-input-block\">\n" +
+                "                        <textarea placeholder=\"请输入答案\" class=\"layui-textarea answer\"></textarea>\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "       上传zip附件：<input type='file' name='fileUpload' class='layui-input' onchange="+'uploadZip('+items.id+')'+">  <input name='zipPath' id="+'zipPath'+items.id+" type='hidden'> </div>\n" +
+                "        </div>");
 
             _div.appendTo($("#itemArea"));
         }
