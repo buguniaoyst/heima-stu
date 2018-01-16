@@ -1,14 +1,8 @@
 package com.heima.test.web;
 
 import com.github.abel533.mapper.Mapper;
-import com.heima.test.domain.AnswerInfo;
-import com.heima.test.domain.StudentInfo;
-import com.heima.test.domain.TestSource;
-import com.heima.test.domain.User;
-import com.heima.test.service.AnswerInfoService;
-import com.heima.test.service.StudentInfoService;
-import com.heima.test.service.TestSourceService;
-import com.heima.test.service.UserService;
+import com.heima.test.domain.*;
+import com.heima.test.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +30,8 @@ public class AnswerInfoController {
     @Autowired
     private StudentInfoService studentInfoService;
 
-    @Autowired
-    private UserService userService;
+
+
 
     @RequestMapping(value = "addAnswerInfo",method = RequestMethod.POST)
     @ResponseBody
@@ -54,6 +48,7 @@ public class AnswerInfoController {
             //修改数据库中的状态
             studentInfoService.updateSelectiveById(loginStu);
             Boolean flag =  answerInfoService.addAnswerInfo(answerInfo,loginStu);
+            //往考试记录中插入一条记录
             result.put("result", flag);
         }else{
             result.put("result", false);

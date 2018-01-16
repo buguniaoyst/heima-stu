@@ -4,16 +4,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.abel533.entity.Example;
 import com.heima.test.dao.AnswerInfoDao;
-import com.heima.test.domain.AnswerInfo;
-import com.heima.test.domain.ScoreInfo;
-import com.heima.test.domain.StudentInfo;
-import com.heima.test.domain.User;
+import com.heima.test.domain.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,6 +21,9 @@ public class AnswerInfoService extends  BaseService<AnswerInfo> {
     @Autowired
     private AnswerInfoDao answerInfoDao;
 
+    @Autowired
+    private TestRecordsService testRecordsService;
+
     private ObjectMapper mapper = new ObjectMapper();
 
     public Boolean addAnswerInfo(String answerInfo,StudentInfo loginStu) {
@@ -31,12 +32,21 @@ public class AnswerInfoService extends  BaseService<AnswerInfo> {
             List<AnswerInfo> answerInfoList = mapper.readValue(answerInfo, new TypeReference<List<AnswerInfo>>() {});
             System.out.println(answerInfoList);
             if (null != answerInfoList && answerInfoList.size()>0){
+                AnswerInfo as = answerInfoList.get(0);
                 for(AnswerInfo answer:answerInfoList){
                     answer.setTestId(loginStu.getTestId()+"");
                     answer.setStuName(loginStu.getStudentName());
                     answer.setAnswerStatus(0);
                     save(answer);
                 }
+
+                TestRecords testRecords = new TestRecords();
+                testRecords.setClassId(Integer.valueOf(as.getClassId()));
+                testRecords.setUserId(as.getStuId());
+                testRecords.setTestId(Integer.valueOf(as.getTestId()));
+                testRecords.setPiyueStatus(0);
+                testRecords.setTestDate(new Date());
+                testRecordsService.save(testRecords);
             }
         } catch (IOException e) {
             e.printStackTrace();

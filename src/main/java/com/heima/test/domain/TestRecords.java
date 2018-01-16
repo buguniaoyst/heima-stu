@@ -1,6 +1,7 @@
 package com.heima.test.domain;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 /**
@@ -30,6 +31,15 @@ public class TestRecords {
 	private String testName;//试卷名称
 	
 	private Double score;//考试成绩
+
+	/**
+	 * 批阅状态：0-未批阅  1-已批阅
+	 */
+	private Integer piyueStatus;
+
+	private Date testDate;
+
+
 
 	public Integer getId() {
 		return id;
@@ -93,5 +103,21 @@ public class TestRecords {
 
 	public void setScore(Double score) {
 		this.score = score;
+	}
+
+    public Integer getPiyueStatus() {
+        return piyueStatus;
+    }
+
+    public void setPiyueStatus(Integer piyueStatus) {
+        this.piyueStatus = piyueStatus;
+    }
+
+	public Date getTestDate() {
+		return testDate;
+	}
+
+	public void setTestDate(Date testDate) {
+		this.testDate = testDate;
 	}
 }

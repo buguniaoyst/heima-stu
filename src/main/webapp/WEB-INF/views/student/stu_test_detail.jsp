@@ -82,7 +82,7 @@
 
                     }else if(data && data.testSource == 1) {
                        // window.open("${pageContext.request.contextPath}/rest/primary_test", "_parent");
-                        location.href = "${pageContext.request.contextPath}/rest/primary_test";
+                        location.href = "${pageContext.request.contextPath}/rest/senior_test";
                         return;
                     }
                     $("#stuTestName").html(data.testSource.testName);
@@ -91,8 +91,14 @@
                         var count = 1;
                         for(var i = 0;i<items.length;i++){
                             //创建编程题
-                            if(items[i].itemType == '1') {
+                            if(items[i].itemType == '0') {
                                 createCodeItem(items[i],count);
+                                count++;
+                            }else if(items[i].itemType == '1') {
+                                createSingleChoiceItem(items[i],count);
+                                count++;
+                            }else if(items[i].itemType == '2') {
+                                createMultiChoiceItem(items[i],count);
                                 count++;
                             }
                         }
@@ -112,10 +118,154 @@
 
             console.log(items);
 
-            var _div = $(codeItemTemplate);
+            var _div = $("<div class='itemAnswerArea' itemType= '0' id="+items.id+" >\n" +
+                "            <div class=\"site-title\">\n" +
+                "                <fieldset><legend><a >第"+count+"题</a></legend></fieldset>\n" +
+                "            </div>\n" +
+                "            <div class=\"site-item\">\n" +
+                "               "+ items.itemContent+"\n" +
+                "            </div>\n" +
+                "            <div>\n" +
+                "\n" +
+                "                <div class=\"layui-form-item layui-form-text\">\n" +
+                "                    <label class=\"layui-form-label\">请在写下你的做题思路（步骤）：</label>\n" +
+                "                    <div class=\"layui-input-block\">\n" +
+                "                        <textarea placeholder=\"请输入思路\" class=\"layui-textarea silu\"></textarea>\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "            <div>\n" +
+                "\n" +
+                "                <div class=\"layui-form-item layui-form-text\">\n" +
+                "                    <label class=\"layui-form-label\">请将你的答案粘贴到下边的文本域中：</label>\n" +
+                "                    <div class=\"layui-input-block\">\n" +
+                "                        <textarea placeholder=\"请输入答案\" class=\"layui-textarea answer\"></textarea>\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "       上传zip附件：<input type='file' name='fileUpload' class='layui-input' onchange="+'uploadZip('+items.id+')'+">  <input name='zipPath' id="+'zipPath'+items.id+" type='hidden'> </div>\n" +
+                "        </div>");
 
             _div.appendTo($("#itemArea"));
         }
+
+
+        /**
+         * 创建单选题
+         */
+        function createSingleChoiceItem( items,count){
+            console.log(items);
+            var singleItemArea = $('  <div class="itemAnswerArea" itemType= "1"  id='+items.id+' >\n' +
+                '                \n' +
+                '            </div>');
+            var itemTitle = $('<div class="site-title">\n' +
+                '                    <fieldset><legend><a>第'+count+'题</a></legend></fieldset>\n' +
+                '                </div>\n' +
+                '                <div class="site-item">\n' +
+                '                    \n' +items.itemContent+
+                '                </div>');
+            var itemAnswerOption = items.itemAnswerOption;
+            var optionDiv;
+            if(itemAnswerOption) {
+                var itemOptions = itemAnswerOption.split(',');
+                console.log(itemOptions);
+                if(itemOptions && itemOptions.length>=4) {
+                    optionDiv = $('<div></div>');
+                    var opt0 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="radio"  name="q1" value="A" title="A">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[0]+'</lable>\n' +
+                        '    </div>');
+                    var opt1 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="radio"  name="q1" value="B" title="B">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[1]+'</lable>\n' +
+                        '    </div>');
+                    var opt2 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="radio"  name="q1" value="C" title="C">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[2]+'</lable>\n' +
+                        '    </div>');
+                    var opt3 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="radio"  name="q1" value="D" title="D">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[3]+'</lable>\n' +
+                        '    </div>');
+                    opt0.appendTo(optionDiv);
+                    opt1.appendTo(optionDiv);
+                    opt2.appendTo(optionDiv);
+                    opt3.appendTo(optionDiv);
+                }
+            }
+
+            itemTitle.appendTo(singleItemArea);
+            optionDiv.appendTo(singleItemArea);
+            singleItemArea.appendTo($("#itemArea"));
+            form.render();
+        }
+
+
+        /**
+         * 创建多选题
+         */
+        function createMultiChoiceItem( items,count){
+            console.log(items);
+            var singleItemArea = $('  <div class="itemAnswerArea" itemType= "2"  id='+items.id+' >\n' +
+                '                \n' +
+                '            </div>');
+            var itemTitle = $('<div class="site-title">\n' +
+                '                    <fieldset><legend><a>第'+count+'题</a></legend></fieldset>\n' +
+                '                </div>\n' +
+                '                <div class="site-item">\n' +
+                '                    \n' +items.itemContent+
+                '                </div>');
+            var itemAnswerOption = items.itemAnswerOption;
+            var optionDiv;
+            if(itemAnswerOption) {
+                var itemOptions = itemAnswerOption.split(',');
+                console.log(itemOptions);
+                if(itemOptions && itemOptions.length>=4) {
+                    optionDiv = $('<div></div>');
+                    var opt0 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="checkbox"  name="q1" value="A" title="A">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[0]+'</lable>\n' +
+                        '    </div>');
+                    var opt1 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="checkbox"  name="q1" value="B" title="B">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[1]+'</lable>\n' +
+                        '    </div>');
+                    var opt2 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="checkbox"  name="q1" value="C" title="C">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[2]+'</lable>\n' +
+                        '    </div>');
+                    var opt3 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="checkbox"  name="q1" value="D" title="D">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[3]+'</lable>\n' +
+                        '    </div>');
+                    opt0.appendTo(optionDiv);
+                    opt1.appendTo(optionDiv);
+                    opt2.appendTo(optionDiv);
+                    opt3.appendTo(optionDiv);
+                }
+            }
+
+            itemTitle.appendTo(singleItemArea);
+            optionDiv.appendTo(singleItemArea);
+            singleItemArea.appendTo($("#itemArea"));
+            form.render();
+        }
+
 
 
         $(function () {
@@ -129,20 +279,61 @@
                 var classId = ${loginStu.classId};
                 if(_divs){
                     _divs.each(function () {
-                        var id = $(this).attr('id');
-                        var silu = $(this).find('textarea')[0].value;
-                        var answer = $(this).find('textarea')[1].value;
-                        var zipPath = $(this).find('input')[1].value;
-                        var itemAnswer = {};
-                        itemAnswer.stuId=stuId;
-                        itemAnswer.classId=classId;
-                        itemAnswer.itemId=id;
-                        itemAnswer.silu = silu;
-                        itemAnswer.answer = answer;
-                        itemAnswer.zipPath = zipPath;
-                        itemAnswer.testName = $("#stuTestName").html();
-                        itemAnswers.push(itemAnswer);
-                        console.log(itemAnswer);
+                        //判断题型
+                        var itemType = $(this).attr("itemType");
+                        //编程题
+                        if('0'== itemType) {
+                            var id = $(this).attr('id');
+                            var silu = $(this).find('textarea')[0].value;
+                            var answer = $(this).find('textarea')[1].value;
+                            var zipPath = $(this).find('input')[1].value;
+                            var itemAnswer = {};
+                            itemAnswer.stuId=stuId;
+                            itemAnswer.classId=classId;
+                            itemAnswer.itemId=id;
+                            itemAnswer.silu = silu;
+                            itemAnswer.answer = answer;
+                            itemAnswer.zipPath = zipPath;
+                            itemAnswer.testName = $("#stuTestName").html();
+                            itemAnswers.push(itemAnswer);
+                            console.log(itemAnswer);
+                        }else if('1' == itemType) {
+                            var id = $(this).attr('id');
+                           // var answer = $(this).find('radio selected').value;
+                            var answer =  $('input:radio:checked').val();
+                            var itemAnswer = {};
+                            itemAnswer.stuId=stuId;
+                            itemAnswer.classId=classId;
+                            itemAnswer.itemId=id;
+                            itemAnswer.answer = answer;
+                            itemAnswer.testName = $("#stuTestName").html();
+                            itemAnswers.push(itemAnswer);
+                            console.log(itemAnswer);
+                        }else if('2' == itemType) {
+                            var id = $(this).attr('id');
+//                            var answers = $(this).find('checkbox selected').value;
+                            var answer = "";
+                            var answers =  $('input:checkbox:checked');
+                            if(answers && answers.length>0) {
+                                for(var i=0;i<answers.length;i++) {
+                                    if(i<answers.length-1) {
+                                        answer =answer+ answers[i].value + ",";
+                                    }else{
+                                        answer =answer+ answers[i].value + "";
+                                    }
+                                }
+                            }
+
+                            var itemAnswer = {};
+                            itemAnswer.stuId=stuId;
+                            itemAnswer.classId=classId;
+                            itemAnswer.itemId=id;
+                            itemAnswer.answer = answer;
+                            itemAnswer.testName = $("#stuTestName").html();
+                            itemAnswers.push(itemAnswer);
+                            console.log(itemAnswer);
+                        }
+
                     })
                 }
 

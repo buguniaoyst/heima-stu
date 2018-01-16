@@ -29,7 +29,6 @@ public class StudentInfo {
 
 
 
-
     public String getPassword() {
         return password;
     }
@@ -102,6 +101,8 @@ public class StudentInfo {
     public void setTestStatus(Integer testStatus) {
         this.testStatus = testStatus;
     }
+
+
 
     @Override
     public String toString() {

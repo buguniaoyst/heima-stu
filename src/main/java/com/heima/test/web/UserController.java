@@ -57,43 +57,45 @@ public class UserController {
             return new ModelAndView("login","message","请输入正确的用户名和密码");
         }
 
-        //查询
-        List<User> userList = userService.queryListByExample(user);
-
-
-        if(null != userList && userList.size()>0 ){
-            session.setAttribute("loginUser",userList.get(0));
-            String userType = userList.get(0).getUsertype();
-//            if(StringUtils.isNotBlank(userType) && "管理员".equals(userType)){
-//                return new ModelAndView("redirect:/rest/index");
+//        //查询
+//        List<User> userList = userService.queryListByExample(user);
+//
+//
+//        if(null != userList && userList.size()>0 ){
+//            session.setAttribute("loginUser",userList.get(0));
+//            String userType = userList.get(0).getUsertype();
+////            if(StringUtils.isNotBlank(userType) && "管理员".equals(userType)){
+////                return new ModelAndView("redirect:/rest/index");
+////            }
+//
+//            //如果学员信息中既有classid又有testid则根据testid安排测试
+//            if(StringUtils.isNotBlank(userList.get(0).getTestid()) && StringUtils.isNotBlank(userList.get(0).getClassid())){
+//               //重定向到测试页面
+//                //return new ModelAndView("redirect:/rest/stu_test_detail");
+//                return new ModelAndView("redirect:/rest/stu_home");
 //            }
+//
+//
+//            //根据testid查询试卷
+//            TestCtrl testCtrl = new TestCtrl();
+//            String classid = userList.get(0).getClassid();
+//            testCtrl.setTestId(classid);
+//            TestCtrl exitTestCtrl =  testService.queryListByExample(testCtrl);
+//            if(null != exitTestCtrl && "开启".equals(exitTestCtrl.getTestStatus())){
+//                if(StringUtils.isNotBlank(classid) && classid.endsWith("0")){
+//                    return new ModelAndView("primary_test");
+//                }else{
+//                    return new ModelAndView("senior_test");
+//                }
+//            }else{
+//                return new ModelAndView("login","message","此次考试已经结束");
+//            }
+//        }else{
+//            return new ModelAndView("login","message","请输入正确的用户名和密码");
+//
+//        }
 
-            //如果学员信息中既有classid又有testid则根据testid安排测试
-            if(StringUtils.isNotBlank(userList.get(0).getTestid()) && StringUtils.isNotBlank(userList.get(0).getClassid())){
-               //重定向到测试页面
-                //return new ModelAndView("redirect:/rest/stu_test_detail");
-                return new ModelAndView("redirect:/rest/stu_home");
-            }
-
-
-            //根据testid查询试卷
-            TestCtrl testCtrl = new TestCtrl();
-            String classid = userList.get(0).getClassid();
-            testCtrl.setTestId(classid);
-            TestCtrl exitTestCtrl =  testService.queryListByExample(testCtrl);
-            if(null != exitTestCtrl && "开启".equals(exitTestCtrl.getTestStatus())){
-                if(StringUtils.isNotBlank(classid) && classid.endsWith("0")){
-                    return new ModelAndView("primary_test");
-                }else{
-                    return new ModelAndView("senior_test");
-                }
-            }else{
-                return new ModelAndView("login","message","此次考试已经结束");
-            }
-        }else{
-            return new ModelAndView("login","message","请输入正确的用户名和密码");
-
-        }
+        return null;
 
     }
 
@@ -104,7 +106,7 @@ public class UserController {
     public String loginOut(HttpSession session){
         //销毁session
         session.invalidate();
-        return "redirect:/rest/admin_login";
+        return "redirect:/rest/login";
     }
 
 

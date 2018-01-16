@@ -22,7 +22,7 @@
 		select 
 		
 			a.item_id as itemId,a.silu,a.answer,a.score,i.item_answer as itemAnswer,i.item_content as itemContent,i.item_score as itemScore,i.video_path as videoPath
-			,i.pic_path as picPath
+			,i.pic_path as picPath,i.item_type as itemType,i.item_answer_option as itemAnswerOption
 		
 		from answer_info a LEFT JOIN item_info i ON a.item_id=i.id where a.stu_id=#{stuId} and test_id=#{testId}
 	</select>

@@ -9,6 +9,9 @@ public class ItemInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String classType;
+    /**
+     * 题型：0-编程题  1-单选题  2-多选题
+     */
     private String itemType;
     private String itemSourceId;
     private String itemStatus;
@@ -17,6 +20,7 @@ public class ItemInfo {
     private String itemAnswer;
     private String videoPath;
     private String picPath;
+    private String itemAnswerOption;
 
     public Integer getId() {
         return id;
@@ -98,6 +102,15 @@ public class ItemInfo {
         this.picPath = picPath;
     }
 
+    public String getItemAnswerOption() {
+        return itemAnswerOption;
+    }
+
+    public void setItemAnswerOption(String itemAnswerOption) {
+        this.itemAnswerOption = itemAnswerOption;
+    }
+
+
     @Override
     public String toString() {
         return "ItemInfo{" +
@@ -111,6 +124,7 @@ public class ItemInfo {
                 ", itemAnswer='" + itemAnswer + '\'' +
                 ", videoPath='" + videoPath + '\'' +
                 ", picPath='" + picPath + '\'' +
+                ", itemAnswerOption='" + itemAnswerOption + '\'' +
                 '}';
     }
 }

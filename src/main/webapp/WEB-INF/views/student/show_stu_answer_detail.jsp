@@ -64,14 +64,21 @@
                 success: function (answerInfos) {
                     console.log(answerInfos);
                     $("#stuTestName").html("${param.testName}");
-                    $("#stuName").html("${loginUser.username}");
+                    $("#stuName").html("${loginStu.studentName}");
                     if(answerInfos && answerInfos.length>0) {
                         var count = 1;
                         for(var i = 0;i<answerInfos.length;i++){
                             //根据itemId查询 item信息
                            var itemId =  answerInfos[i].itemId;
-                            createCodeItem(count,answerInfos[i]);
-                            count++;
+                           var itemType = answerInfos[i].itemType;
+                            if(itemType == 0) {
+                                createCodeItem(count,answerInfos[i]);
+                                count++;
+                            }else{
+                                createSingleChoiceItem(count, answerInfos[i]);
+                                count++;
+                            }
+
                         }
                     }
 
@@ -111,7 +118,7 @@
                 "                </div>\n" +
                 "            </div>\n" +
                 "        </div>");
-            var scoreSpan = $("<img style='height:400px' src="+answer.picPath+"></img>");
+            var scoreSpan = $("<img style='height:auto' src="+answer.picPath+"></img>");
             var siluAnswerSite = $("<div class='site-item' style='color: red;font-size: large'>思路解析</div>");
             var cankaoAnswer = $("<div class='site-item' style='color: red;font-size: large'>参考答案</div><div class='layui-form-item'><pre  style='height:auto' class='layui-code'><font color='red'>"+answer.itemAnswer+"</font></pre></div>");
             _div.appendTo($("#itemArea"));
@@ -124,6 +131,104 @@
             var videoDiv = $("<div><input type='button' class='layui-btn' value='【视频讲解】'></input></div>")
             videoDiv.appendTo(_div);
             _video.appendTo(_div);
+        }
+
+        /*显示单选题
+       * */
+        function createSingleChoiceItem(count,item) {
+            var itemType = "";
+            if(item.itemType == 1) {
+                itemType = "【单选题】";
+            }else{
+                itemType = "【多选题】";
+            }
+            var itemAnswer = $("<div class='itemAnswerArea' id="+item.id+"></div>");
+            var itemContent = $('<div class="site-title">\n' +
+                '                    <fieldset><legend><a>第'+count+'题('+item.itemScore+'分)</a></legend></fieldset>\n' +
+                '                </div>\n' +
+                '                <div class="site-item">\n' +
+                '                    \n' +itemType+item.itemContent+
+                '                </div>');
+            var answerOptions = item.itemAnswerOption;
+            var optionDiv;
+            if(answerOptions && answerOptions.length>0) {
+                var itemOptions = answerOptions.split(',');
+
+                console.log(itemOptions);
+                if(itemOptions && itemOptions.length>=4) {
+                    optionDiv = $('<div></div>');
+                    var opt0 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="radio"  name="q1" value="A" title="A">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[0]+'</lable>\n' +
+                        '    </div>');
+                    var opt1 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="radio"  name="q1" value="B" title="B">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[1]+'</lable>\n' +
+                        '    </div>');
+                    var opt2 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="radio"  name="q1" value="C" title="C">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[2]+'</lable>\n' +
+                        '    </div>');
+                    var opt3 = $('<div >\n' +
+                        '      <span style="font-size: 25px">\n' +
+                        '          <input type="radio"  name="q1" value="D" title="D">\n' +
+                        '      </span>\n' +
+                        '     <lable>'+itemOptions[3]+'</lable>\n' +
+                        '    </div>');
+                    opt0.appendTo(optionDiv);
+                    opt1.appendTo(optionDiv);
+                    opt2.appendTo(optionDiv);
+                    opt3.appendTo(optionDiv);
+                }
+
+                //判断得分
+                var thisItemSocre = 0;
+                var thisItemAnas;
+                if(item.itemAnswer == item.answer) {
+                    thisItemSocre = item.itemScore;
+                }
+
+                if(thisItemSocre) {
+                    thisItemAnas = $(' <div >\n' +
+                        '                    <blockquote class="layui-elem-quote">学员答案：<font color="#20b2aa" size="5">'+item.answer+'</font> <i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe618;</i>参考答案：<font color="red" size="5">'+item.itemAnswer+'</font> </blockquote>\n' +
+                        '                </div>');
+                }else{
+                    thisItemAnas = $(' <div >\n' +
+                        '                    <blockquote class="layui-elem-quote">学员答案：<font color="#20b2aa" size="5">'+item.answer+'</font> <i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#x1006;</i>参考答案：<font color="red" size="5">'+item.itemAnswer+'</font> </blockquote>\n' +
+                        '                </div>');
+                }
+            }
+
+            //思路解析
+            var scoreSpan = $("<img style='height:auto' src="+item.picPath+"></img>");
+            var siluAnswerSite = $("<div class='site-item' style='color: red;font-size: large'>思路解析</div>");
+
+
+            //分析学员判断
+
+            var itemScore = $(' <div class="layui-form-item">\n' +
+                '                    <label class="layui-form-label">得分</label>\n' +
+                '                    <div class="layui-input-inline">\n' +
+                '                        <input type="number" readonly="readonly" value='+thisItemSocre+' name="itemScore" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">\n' +
+                '                    </div>\n' +
+                '                </div>');
+
+
+            itemContent.appendTo(itemAnswer);
+            optionDiv.appendTo(itemAnswer);
+            thisItemAnas.appendTo(itemAnswer);
+            siluAnswerSite.appendTo(itemAnswer);
+            scoreSpan.appendTo(itemAnswer);
+            itemScore.appendTo(itemAnswer);
+            itemAnswer.appendTo($("#itemArea"));
+            form.render();
+
         }
 
 
